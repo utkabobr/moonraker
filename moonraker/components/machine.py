@@ -508,6 +508,9 @@ class Machine:
         )
 
     def _get_sdcard_info(self) -> Dict[str, Any]:
+        # Beam changed: No permissions on Android
+        if True:
+            return {}
         sd_info: Dict[str, Any] = {}
         cid_file = pathlib.Path(SD_CID_PATH)
         if not cid_file.exists():
