@@ -173,9 +173,10 @@ class Machine:
         shell_cmd: SCMDComp = self.server.load_component(
             config, 'shell_command')
         self.addr_cmd = shell_cmd.build_shell_command("ip -json -det address")
-        iwgetbin = "/sbin/iwgetid"
-        if not pathlib.Path(iwgetbin).exists():
-            iwgetbin = "iwgetid"
+#         iwgetbin = "/sbin/iwgetid"
+#         if not pathlib.Path(iwgetbin).exists():
+        # Beam changed: No permission on some devices
+        iwgetbin = "iwgetid"
         self.iwgetid_cmd = shell_cmd.build_shell_command(iwgetbin)
         self.init_evt = asyncio.Event()
         self.libcam = self._try_import_libcamera()
