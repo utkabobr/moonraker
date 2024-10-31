@@ -622,8 +622,8 @@ class Machine:
     def _check_inside_container(self) -> Dict[str, Any]:
         cgroup_file = pathlib.Path(CGROUP_PATH)
         virt_type = virt_id = "none"
-        if cgroup_file.exists():
-            try:
+        try:
+            if cgroup_file.exists():
                 data = cgroup_file.read_text()
                 container_types = ["docker", "lxc"]
                 for ct in container_types:
@@ -635,8 +635,8 @@ class Machine:
                             f"Container detected via cgroup: {ct}"
                         )
                         break
-            except Exception:
-                logging.exception(f"Error reading {CGROUP_PATH}")
+        except Exception:
+            logging.exception(f"Error reading {CGROUP_PATH}")
 
         # Fall back to process schedule check
         if not self.inside_container:
