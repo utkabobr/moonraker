@@ -84,7 +84,11 @@ class Machine:
         dist_info = {'name': distro.name(pretty=True)}
         dist_info.update(distro.info())
         dist_info['release_info'] = distro.distro_release_info()
-        dist_info['kernel_version'] = platform.release()
+        try:
+            dist_info['kernel_version'] = platform.release()
+        except Exception:
+            dist_info['kernel_version'] = "Unknown"
+
         self.inside_container = False
         self.moonraker_service_info: Dict[str, Any] = {}
         self.sudo_req_lock = asyncio.Lock()
@@ -573,10 +577,19 @@ class Machine:
     def _get_cpu_info(self) -> Dict[str, Any]:
         cpu_file = pathlib.Path("/proc/cpuinfo")
         mem_file = pathlib.Path("/proc/meminfo")
+        processor = ""
+        bits = ""
+        try:
+            bits = platform.architecture()[0]
+            processor = platform.processor() or platform.machine()
+        except Exception:
+            bits = "Unknown"
+            processor = "Unknown"
+
         cpu_info = {
             'cpu_count': os.cpu_count(),
-            'bits': platform.architecture()[0],
-            'processor': platform.processor() or platform.machine(),
+            'bits': bits,
+            'processor': processor,
             'cpu_desc': "",
             'serial_number': "",
             'hardware_desc': "",
