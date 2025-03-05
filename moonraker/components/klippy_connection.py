@@ -354,7 +354,7 @@ class KlippyConnection:
         return False
 
     def _objects_list(self) -> Any:
-       return {"objects": ["motion_report", "gcode_macro pause", "gcode_macro resume", "gcode_macro cancel_print", "configfile", "heaters", "respond", "display_status", "extruder", "fan", "gcode_move", "heater_bed", "mcu", "mcu nozzle_mcu", "ota_filament_hub", "pause_resume", "pause_resume/cancel", "print_stats", "toolhead", "verify_heater extrude", "verify_heater heater_bed", "virtual_sdcard", "webhooks", "bed_mesh", "bed_mesh \"default\""]}
+       return {"objects": ["motion_report", "gcode_macro pause", "gcode_macro resume", "gcode_macro cancel_print", "gcode_macro t0", "gcode_macro t1", "gcode_macro t2", "gcode_macro t3", "configfile", "heaters", "respond", "display_status", "extruder", "fan", "gcode_move", "heater_bed", "mcu", "mcu nozzle_mcu", "ota_filament_hub", "pause_resume", "pause_resume/cancel", "print_stats", "toolhead", "verify_heater extrude", "verify_heater heater_bed", "virtual_sdcard", "webhooks", "bed_mesh", "bed_mesh \"default\""]}
 
     async def _request_endpoints(self) -> None:
         result = await self.klippy_apis.list_endpoints(default=None)
@@ -617,7 +617,7 @@ class KlippyConnection:
                 del args['objects']['bed_mesh']
             if 'bed_mesh \"default\"' in args['objects']:
                 del args['objects']['bed_mesh \"default\"']
-                
+
             requested_sub: Subscription = args.get('objects', {})
             all_subs: Subscription = dict(requested_sub)
             # Build the subscription request from a superset of all client subscriptions
@@ -681,7 +681,7 @@ class KlippyConnection:
                     pruned_status['configfile']['config']['gcode_macro pause'] = {}
                     pruned_status['configfile']['config']['gcode_macro resume'] = {}
                     pruned_status['configfile']['config']['gcode_macro cancel_print'] = {}
-                
+
                 # Add bed_mesh, so mainsail will recognize it
                 if os.path.isfile("/useremain/home/ytka/printer_data/config/printer_mutable.cfg"):
                     with open('/useremain/home/ytka/printer_data/config/printer_mutable.cfg', 'r') as f:
@@ -689,7 +689,7 @@ class KlippyConnection:
                         mesh = config.get('bed_mesh default')
                         if not mesh is None:
                             points = json.loads("[[" + mesh.get('points').replace("\n", "], [") + "]]")
-                            
+
                             pruned_status['bed_mesh'] = {
                                 "profile_name": "default",
                                 "mesh_min": (float(mesh.get("min_x")), float(mesh.get("min_y"))),
